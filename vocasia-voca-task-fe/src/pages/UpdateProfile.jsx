@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import InputField from "../components/InputField";
-import BlueButton from "../components/BlueButton";
 import CircleImage from "../components/CircleImage";
+import Button from "../components/Button";
 import Person from "../assets/person.png";
+import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSaveProfile = () => {
+    if (!name || !email) {
+      setErrorMessage("Please fill in all fields.");
+      return;
+    }
+
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
+      setErrorMessage("Please enter a valid email.");
+      return;
+    }
+
+    const profileData = { name, email, photo_url: avatarUrl, password };
+
+    updateUserProfile(token, profileData)
+      .then(() => {
+        setErrorMessage("");
+        alert("Profile updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+        setErrorMessage("Error updating profile");
+      });
+  };
+
   return (
     <div className="bg-white px-10 py-10 lg:my-8 rounded-[30px] flex flex-col justify-center items-center">
       <div className="w-full h-10 ">
@@ -29,39 +60,45 @@ const UpdateProfile = () => {
         </a>
       </div>
       <CircleImage link={Person} />
-      <InputField
-        label="Profile Image URL"
-        type="text"
-        id="image"
-        name="image"
-        placeholder="Image URL"
-        required={true}
-      />
-      <InputField
-        label="Name"
-        type="text"
-        id="name"
-        name="name"
-        placeholder="Briska Ananda"
-        required={true}
-      />
-      <InputField
-        label="Email"
-        type="email"
-        id="email"
-        name="email"
-        placeholder="briska@gmail.com"
-        required={true}
-      />
-      <InputField
-        label="Password"
-        type="text"
-        id="password"
-        name="password"
-        placeholder="********"
-        required={true}
-      />
-      <BlueButton text="Submit" link="/task" />
+      <form onSubmit={(e) => e.preventDefault()}>
+        <InputField
+          label="Image URL"
+          type="url"
+          value={avatarUrl}
+          onChange={(e) => setAvatarUrl(e.target.value)}
+          placeholder="<Image URL>"
+        />
+        <InputField
+          label="Name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Briska Ananda"
+        />
+        <InputField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="briskaananda@gmail.com"
+        />
+        <InputField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="********"
+        />
+        <div className="flex justify-center items-center">
+          <Button
+            className="mt-5 px-5 py-2  text-white bg-gradient-to-b from-blue-400 to-blue-500 rounded-[15px] text-center font-semibold text-md transition"
+            onClick={handleSaveProfile}
+            title="Save"
+          >
+            Save
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

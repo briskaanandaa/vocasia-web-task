@@ -11,7 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/task" element={<Task />} />
-          <Route path="/updateProfile" element={<UpdateProfile />} />
+          <Route path="/updateprofile" element={<UpdateProfile />} />
         </Routes>
       </Router>
     </div>
