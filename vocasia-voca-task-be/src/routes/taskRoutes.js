@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const taskController = require('../controllers/taskController');
-const auth = require('../middleware/auth');
+const taskController = require("../controllers/taskController");
+const auth = require("../middleware/auth");
 
 /**
  * @swagger
@@ -26,7 +26,7 @@ const auth = require('../middleware/auth');
  *       201:
  *         description: Task created successfully
  */
-router.post('/', auth, taskController.createTask);
+router.post("/", auth, taskController.createTask);
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ router.post('/', auth, taskController.createTask);
  *       200:
  *         description: Tasks retrieved successfully
  */
-router.get('/', auth, taskController.getUserTasks);
+router.get("/", auth, taskController.getUserTasks);
 
 /**
  * @swagger
@@ -60,7 +60,7 @@ router.get('/', auth, taskController.getUserTasks);
  *       200:
  *         description: Task updated successfully
  */
-router.patch('/:id/done', auth, taskController.updateTaskStatus);
+router.patch("/:id/done", auth, taskController.updateTaskStatus);
 
 /**
  * @swagger
@@ -80,6 +80,6 @@ router.patch('/:id/done', auth, taskController.updateTaskStatus);
  *       200:
  *         description: Task deleted successfully
  */
-router.delete('/:id', auth, taskController.deleteTask);
+router.delete("/:id", auth, taskController.deleteTask);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 // src/routes/userRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userController = require('../controllers/userController');
-const auth = require('../middleware/auth');
+const userController = require("../controllers/userController");
+const auth = require("../middleware/auth");
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ const auth = require('../middleware/auth');
  *                   email: "john@example.com"
  *                   photo_url: "https://example.com/photo.jpg"
  */
-router.post('/login', userController.login);
+router.post("/login", userController.login);
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.post('/login', userController.login);
  *       200:
  *         description: User profile retrieved successfully
  */
-router.get('/profile', auth, userController.getProfile);
+router.get("/profile", auth, userController.getProfile);
 
 /**
  * @swagger
@@ -82,6 +82,6 @@ router.get('/profile', auth, userController.getProfile);
  *       200:
  *         description: Profile updated successfully
  */
-router.put('/profile', auth, userController.updateProfile);
+router.put("/profile", auth, userController.updateProfile);
 
 module.exports = router;
