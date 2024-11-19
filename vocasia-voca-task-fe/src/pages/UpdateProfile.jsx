@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import InputField from "../components/InputField";
 import CircleImage from "../components/CircleImage";
 import Button from "../components/Button";
-import Person from "../assets/person.png";
+import { getUserProfile, updateUserProfile } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
@@ -11,6 +11,24 @@ const UpdateProfile = () => {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    } else {
+      getUserProfile(token)
+        .then((user) => {
+          setName(user.name || "");
+          setEmail(user.email || "");
+          setAvatarUrl(user.photo_url || "");
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile:", error);
+          setErrorMessage("Error fetching user profile");
+        });
+    }
+  }, [token, navigate]);
 
   const handleSaveProfile = () => {
     if (!name || !email) {
@@ -25,6 +43,7 @@ const UpdateProfile = () => {
 
     const profileData = { name, email, photo_url: avatarUrl, password };
 
+    const token = localStorage.getItem("authToken");
     updateUserProfile(token, profileData)
       .then(() => {
         setErrorMessage("");
@@ -63,7 +82,7 @@ const UpdateProfile = () => {
           </button>
         </a>
       </div>
-      <CircleImage link={Person} />
+      <CircleImage link={setAvatarUrl} />
       <form onSubmit={(e) => e.preventDefault()}>
         <InputField
           label="Image URL"

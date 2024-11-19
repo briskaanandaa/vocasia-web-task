@@ -2,29 +2,49 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
+import { loginUser } from "../api/user";
 
 const Login = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const loginUser = async (email, password) => {
-    if (email === "briskaananda@gmail.com" && password === "password123") {
-      return { data: { token: "fake-jwt-token" } };
+  // Setelah login, dapatkan token
+  const login = async () => {
+    const response = await axios.post("/api/users/login", { email, password });
+
+    if (response.data.success) {
+      // Simpan token ke localStorage atau sessionStorage
+      localStorage.setItem("authToken", response.data.data.token);
     } else {
-      throw new Error("Invalid email or password");
+      // Tangani error login
+      console.error("Login failed");
     }
+  };
+
+  // Penggunaan token untuk permintaan berikutnya
+  const getProfile = async () => {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.get("/api/users/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
   };
 
   const handleSignIn = async () => {
     try {
       const data = await loginUser(email, password);
-      localStorage.setItem("token", data.data.token);
-      alert("Login berhasil!");
-      navigate("/task");
+
+      if (data && data.token) {
+        localStorage.setItem("token", data.token);
+        alert("Login Success!");
+        navigate("/task");
+      } else {
+        alert("Login Failed: Token not received");
+      }
     } catch (error) {
-      alert("Login gagal: " + error.message);
+      alert("Login Failed: " + error.message);
     }
   };
 
@@ -35,15 +55,7 @@ const Login = () => {
         <br />
         Task
       </h1>
-      <InputField
-        label="Name"
-        type="text"
-        id="name"
-        name={name}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Briska Ananda"
-      />
+
       <InputField
         label="Email"
         type="email"
@@ -51,7 +63,7 @@ const Login = () => {
         name={email}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="briskaananda@gmail.com"
+        placeholder="your-email@gmail.com"
       />
       <InputField
         label="Password"

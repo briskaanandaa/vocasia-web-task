@@ -136,7 +136,7 @@ function Task() {
 
         {/* Done Task */}
         <div className="my-1">
-          <h2 className="font-semibold text-green-600">
+          <h2 className="font-semibold text-lg text-green-600">
             Done - ({taskDone.length})
           </h2>
           {taskDone.length > 0 ? (
